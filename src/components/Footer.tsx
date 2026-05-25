@@ -84,8 +84,15 @@ export default function Footer() {
           <div className="text-[10px] text-luxury-desc/40 uppercase tracking-[0.15em] text-center md:text-left leading-loose">
             <div>© {new Date().getFullYear()} MUHAMMAD USMAN. ALL RIGHTS RESERVED.</div>
             <div className="mt-1">
-              POWRED BY{" "}
-              <span className="text-champagne-light font-semibold">ORBIT TECHNOLOGIES</span>
+              POWERED BY{" "}
+              <a
+                href="https://orbit-technologies.usmanbhatti4945.workers.dev/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-champagne-light font-semibold hover:text-luxury-text transition-colors"
+              >
+                ORBIT TECHNOLOGIES
+              </a>
             </div>
           </div>
 

@@ -14,23 +14,41 @@ export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.email || !formData.message) return;
 
     setIsSubmitting(true);
+    setSubmitError(null);
     
-    // Simulate a cinematic luxury send transition
-    setTimeout(() => {
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setIsSubmitted(true);
+        setFormData({ name: "", email: "", subject: "", message: "" });
+        
+        // Reset success state after a few seconds
+        setTimeout(() => {
+          setIsSubmitted(false);
+        }, 8000);
+      } else {
+        setSubmitError(data.error || "Failed to transmit message. Please check parameters and try again.");
+      }
+    } catch (err) {
+      console.error(err);
+      setSubmitError("SMTP dispatch disruption. Please verify email structures or try again.");
+    } finally {
       setIsSubmitting(false);
-      setIsSubmitted(true);
-      setFormData({ name: "", email: "", subject: "", message: "" });
-      
-      // Reset success state after a few seconds
-      setTimeout(() => {
-        setIsSubmitted(false);
-      }, 5000);
-    }, 2000);
+    }
   };
 
   const socials = [
@@ -81,9 +99,21 @@ export default function Contact() {
                   Accepting Premium Client Contracts
                 </h3>
                 <p className="text-xs text-luxury-desc leading-relaxed">
-                  Active in Creative AI commercial directions, full-stack software system architecture, and modern UX design workflows.
+                  Active in Creative AI commercial directions, full-stack software system architecture, and modern UX design workflows via my agency.
                 </p>
-                <div className="pt-2 flex items-center gap-2 text-xs font-bold text-champagne-light uppercase tracking-wider">
+
+                {/* Orbit Technologies Link */}
+                <a 
+                  href="https://orbit-technologies.usmanbhatti4945.workers.dev/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs text-champagne-light font-bold uppercase tracking-wider hover:text-luxury-text transition-colors group/link pt-1"
+                >
+                  Explore Orbit Technologies
+                  <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
+                </a>
+
+                <div className="pt-2 flex items-center gap-2 text-xs font-bold text-champagne-light uppercase tracking-wider border-t border-luxury-border/50 pt-4">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                   AVERAGE RESPONSE TIME: &lt; 12 HOURS
                 </div>
@@ -98,7 +128,7 @@ export default function Contact() {
               
               <div className="space-y-4">
                 <a 
-                  href="mailto:usman.work@gmail.com" 
+                  href="mailto:usmanbhatti4945@gmail.com" 
                   className="flex items-center gap-4 p-4 rounded-xl border border-luxury-border/50 hover:border-champagne-light/30 bg-luxury-panel/40 hover:bg-luxury-panel transition-all duration-300 group"
                 >
                   <div className="w-10 h-10 rounded-lg bg-champagne-light/5 border border-champagne-light/10 flex items-center justify-center text-champagne-light group-hover:scale-105 transition-transform">
@@ -106,7 +136,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <span className="text-[10px] text-luxury-desc/60 block uppercase tracking-wider font-semibold">EMAIL US</span>
-                    <span className="text-sm font-semibold text-luxury-text group-hover:text-champagne-light transition-colors">usman.work@gmail.com</span>
+                    <span className="text-sm font-semibold text-luxury-text group-hover:text-champagne-light transition-colors">usmanbhatti4945@gmail.com</span>
                   </div>
                 </a>
 
@@ -181,6 +211,12 @@ export default function Contact() {
                     All communications are routed through secure enterprise channels.
                   </p>
                 </div>
+
+                {submitError && (
+                  <div className="p-4 rounded-xl border border-rose-500/20 bg-rose-500/5 text-rose-400 text-xs font-semibold tracking-wide">
+                    {submitError}
+                  </div>
+                )}
 
                 {/* Name Input */}
                 <div className="relative">
